@@ -10,5 +10,16 @@ namespace Shared.Chat
     {
         public int Id { get; set; }
         public List<MessageDTO> Messages { get; set; }
+        public ChatDTO()
+        {
+            Messages = new List<MessageDTO>()
+            {
+                new MessageDTO
+                {
+                    Text = "Wilkommen bei uns",
+                    MessageSenderType = MessageSenderTypeDTO.DargeboteneHandBot
+                }
+            };
+        }
     }
 }

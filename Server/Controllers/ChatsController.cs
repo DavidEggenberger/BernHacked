@@ -26,7 +26,7 @@ namespace Server.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Retrieve a specified chat
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
@@ -38,7 +38,7 @@ namespace Server.Controllers
 
 
         /// <summary>
-        /// 
+        /// Create a new chat
         /// </summary>
         /// <param name="chat"></param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace Server.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Add a message to an existing chat
         /// </summary>
         /// <param name="chatId"></param>
         /// <param name="messageDTO"></param>
@@ -73,6 +73,20 @@ namespace Server.Controllers
             }
 
             return Ok();
+        }
+
+        /// <summary>
+        /// Add a message to an existing chat
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
+        [Tags("Messages")]
+        [HttpPost("messages/{chatId}")]
+        public ActionResult<IEnumerable<ChatDTO>> GetMessagesForChat([FromRoute] int chatId)
+        {
+            Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
+
+            return Ok(chat.Messages.Select(x => x.ToDTO()));
         }
     }
 }

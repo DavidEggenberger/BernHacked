@@ -6,10 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Server.DomainFeatures.ChatAggregate;
+using Server.DomainFeatures.CounselingRessourceAggregate;
 using Server.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Server
@@ -29,6 +32,13 @@ namespace Server
             services.AddRazorPages();
             services.AddControllers();
 
+            services.AddAuthentication()
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = "Auth_Cookie";
+                    options.Cookie.Expiration = TimeSpan.FromDays(1);
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -43,9 +53,13 @@ namespace Server
                         }
                     });
                 
+                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //c.IncludeXmlComments(xmlPath);
             });
 
             services.RegisterChatModule();
+            services.RegisterCounselingRessourcesModule();
 
             services.RegisterServices();
         }
@@ -77,6 +91,7 @@ namespace Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

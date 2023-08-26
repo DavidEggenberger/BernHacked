@@ -1,0 +1,33 @@
+﻿@page "/Login"
+@{
+    Layout = "Shared/_Layout.cshtml";
+}
+
+@model Server.Pages.LoginModel
+
+<div class="page">
+    <nav>
+        <section>
+            <h1>Dargebotene Hand </h1><span>👐</span>
+        </section>
+        <section>
+            <a href="swagger/index.html">
+                <button>
+                    Explore our API
+                </button>
+            </a>
+            <a href="">
+                <button>
+                    Back to Start
+                </button>
+            </a>
+        </section>
+    </nav>
+    <main style="height: 100%; width: 100%; display: grid; place-content: center;">
+        <div class="card">
+            <label>Password:</label>
+            <input type="password" />
+            <button>Login</button>
+        </div>
+    </main>
+</div>

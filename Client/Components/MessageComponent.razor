@@ -1,0 +1,13 @@
+﻿<div class="Message @Styling">
+    @Message.Text
+</div>
+
+@code {
+    [Parameter]
+    public MessageDTO Message { get; set; }
+
+    private string Styling => Message.MessageSenderType switch
+    {
+        _ => "DargeboteneHand"
+    };
+}

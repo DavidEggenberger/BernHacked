@@ -1,0 +1,14 @@
+﻿.Message{
+    border-radius: 5px;
+    min-height: 25px;
+    width: auto;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    box-sizing: border-box;
+    padding-left: 5px;
+}
+.DargeboteneHand {
+    background-color: rgba(252, 136, 98, 0.5);
+}
