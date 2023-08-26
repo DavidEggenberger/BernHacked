@@ -48,6 +48,7 @@ namespace Server
             }
 
             app.UseHttpsRedirection();
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -58,7 +59,7 @@ namespace Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapFallbackToPage("_host.cshtml");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
