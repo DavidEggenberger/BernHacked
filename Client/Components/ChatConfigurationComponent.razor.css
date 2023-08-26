@@ -47,7 +47,6 @@
 }
 .OptionsContainer{
     padding-top: 10px;
-    height: 280px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

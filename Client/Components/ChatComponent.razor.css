@@ -45,3 +45,6 @@ input{
     height: 25px;
     margin-left: 5px;
 }
+.Microphone {
+    cursor: pointer;
+}

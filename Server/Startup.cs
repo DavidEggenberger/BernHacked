@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Server.DomainFeatures.ChatAggregate;
 using Server.DomainFeatures.CounselingRessourceAggregate;
+using Server.Hubs;
 using Server.Services;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,7 @@ namespace Server
         {
             services.AddRazorPages();
             services.AddControllers();
+            services.AddSignalR();
 
             services.AddAuthentication()
                 .AddCookie(options =>
@@ -93,6 +95,7 @@ namespace Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<NotificationHub>("/notificationHub");
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/_Host");

@@ -1,13 +1,31 @@
 ﻿@page "/"
+@inject NavigationManager navigationManager
 
-<div class="chatOverviewContainer">
-    <ChatConfigurationComponent Configurationupdated="(c) => Configurations = c"/>
-    <ChatComponent Configurations="Configurations"/>
+<CascadingValue Value="HubConnection">
+    <div class="chatOverviewContainer">
+        <ChatConfigurationComponent Configurationupdated="(c) => Configurations = c"/>
+        <ChatComponent Configurations="Configurations"/>
     <div>
     </div>
-</div>
+    </div>
+</CascadingValue>
+
 
 @code{
     private List<ChatConfigurationDTO> Configurations = new List<ChatConfigurationDTO>();
+
+    public HubConnection HubConnection { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection = new HubConnectionBuilder()
+                .WithUrl(navigationManager.ToAbsoluteUri("/notificationHub"), options =>
+                {
+                    
+                })
+                .Build();
+        await HubConnection.StartAsync();
+        StateHasChanged();
+    }
 
 }

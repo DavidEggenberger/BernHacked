@@ -1,5 +1,5 @@
 ﻿<div class="ChatConfigurationComponentContainer">
-    <div class="Konfigurator" style='@(expanded ? "height: 300px;" : string.Empty)'>
+    <div class="Konfigurator" style='@(expanded ? "height: 180px;" : string.Empty)'>
         <div class="ChatFlex" @onclick="() => Expand()" >
             <h3>Konfigurieren sie den Chat </h3>
             <img style='@(expanded ? "rotate: 180deg;" : string.Empty)' src="/down-arrow.png"/>
@@ -30,7 +30,8 @@
         AvailableChatConfigurations = new List<(string, ChatConfigurationDTO)>
         {
             ("adsf", ChatConfigurationDTO.TextOnly),
-            ("adsfdasf", ChatConfigurationDTO.Listening)
+            ("adsfdasf", ChatConfigurationDTO.Listening),
+            ("adsfdsaf", ChatConfigurationDTO.Speech)
         };
     }
 

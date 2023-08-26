@@ -44,13 +44,20 @@ namespace Server.Controllers
         /// <param name="chat"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult<ChatDTO> CreateChat(ChatDTO chat)
+        public ActionResult<ChatDTO> CreateChat(ChatDTO chatDTO)
         {
-            chat.Id = randomGenerator.GenerateRandomInt();
+            chatDTO.Id = randomGenerator.GenerateRandomInt();
 
-            chatPersistence.AddChat(Chat.FromDTO(chat));
+            var chat = Chat.FromDTO(chatDTO);
+            chatPersistence.AddChat(chat);
 
-            return Ok(chat);
+            var message = chat.Messages.Last();
+            if (botService.CheckIfMessageIsBotHandable(message))
+            {
+                botService.AnswerToMessageAsync(chat, message);
+            }
+
+            return Ok(chat.ToDTO());
         }
 
         /// <summary>
@@ -68,15 +75,10 @@ namespace Server.Controllers
 
             chat.AddMessage(message);
 
-            if (true)
+            if (botService.CheckIfMessageIsBotHandable(message))
             {
-                chat.Messages.Add(new Message { Answers = new List<string> { "sadfasfd", "sdffdsadsf" }, Text = "Please Choose", MessageType = MessageType.Question });
-                chat.Messages.Add(new Message { MessageType = MessageType.PulseExercise });
+                botService.AnswerToMessageAsync(chat, message);
             }
-            //if (botService.CheckIfMessageIsBotHandable(message))
-            //{
-            //    botService.AnswerToMessageAsync(chat, message);
-            //}
 
             return Ok();
         }
@@ -105,6 +107,8 @@ namespace Server.Controllers
         [HttpPost("{chatId}/{question}/{answer}")]
         public ActionResult<MessageDTO> ChooseAnswerForMessageQuestion([FromRoute] int chatId, [FromRoute] string question, [FromRoute] string answer)
         {
+            Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
+
             
 
             return Ok();

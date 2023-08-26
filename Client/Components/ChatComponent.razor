@@ -15,6 +15,10 @@
                 <input @bind="currentMessageText" @bind:event="oninput" />
                 <img src="/enter.png" />
                 <label>Zum Senden Enter drücken</label>
+                @if (Configurations.Contains(ChatConfigurationDTO.Speech))
+                {
+                    <img class="Microphone" src="/microphone.png"/>
+                }
             </div>
         }
     </div>
@@ -24,12 +28,21 @@
     [Parameter]
     public List<ChatConfigurationDTO> Configurations { get; set; }
 
+    [CascadingParameter]
+    public HubConnection HubConnection { get; set; }
+
     private ChatDTO chatDTO;
     private string currentMessageText;
 
     protected override async Task OnInitializedAsync()
     {
         chatDTO = new ChatDTO();
+
+        HubConnection.On("Update", async () =>
+        {
+            await GetMessagesForChat();
+            StateHasChanged();
+        });
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs args)
