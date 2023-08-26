@@ -43,13 +43,13 @@ namespace Server.Controllers
         /// <param name="chat"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult CreateChat(ChatDTO chat)
+        public ActionResult<ChatDTO> CreateChat(ChatDTO chat)
         {
             chat.Id = randomGenerator.GenerateRandomInt();
 
             chatPersistence.AddChat(Chat.FromDTO(chat));
 
-            return Ok();
+            return Ok(chat);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Server.Controllers
         /// <param name="messageDTO"></param>
         /// <returns></returns>
         [Tags("Messages")]
-        [HttpPost("messages/{chatId}")]
+        [HttpPost("{chatId}/messages")]
         public ActionResult CreateMessageInChat([FromRoute] int chatId, MessageDTO messageDTO)
         {
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
@@ -81,7 +81,7 @@ namespace Server.Controllers
         /// <param name="chatId"></param>
         /// <returns></returns>
         [Tags("Messages")]
-        [HttpPost("messages/{chatId}")]
+        [HttpGet("{chatId}/messages")]
         public ActionResult<IEnumerable<ChatDTO>> GetMessagesForChat([FromRoute] int chatId)
         {
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);

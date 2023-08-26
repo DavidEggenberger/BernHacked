@@ -8,6 +8,7 @@
 
     private string Styling => Message.MessageSenderType switch
     {
+        MessageSenderTypeDTO.Patient => "Patient",
         _ => "DargeboteneHand"
     };
 }

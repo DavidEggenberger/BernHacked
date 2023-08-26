@@ -1,7 +1,7 @@
 ﻿@inject HttpClientService httpClientService
 
 <div class="chatComponentContainer">
-    <div class="chatOverview">
+    <div class="chatOverview" @onkeydown="async(c) => await HandleKeyDown(c)">
         @if(chatDTO != null)
         {
             foreach(var message in chatDTO.Messages)
@@ -9,8 +9,11 @@
                 <MessageComponent Message="message"/>            
             }
         }
-        <input @bind="currentMessageText" @bind:event="oninput"/>
-        <button @onclick="async () => await CreateMessageOrChat(new MessageDTO { Text = currentMessageText } )">Send</button>
+        <div class="chatInputContainer">
+            <input @bind="currentMessageText" @bind:event="oninput" />
+            <img src="/enter.png"/>
+            <label>Zum Senden Enter drücken</label>
+        </div>
     </div>
 </div>
 
@@ -23,17 +26,37 @@
         chatDTO = new ChatDTO();
     }
 
-    private async Task CreateMessageOrChat(MessageDTO messageDTO)
+    private async Task HandleKeyDown(KeyboardEventArgs args)
     {
+        if (args.Key == "Enter")
+        {
+            await CreateMessageOrChat(currentMessageText);
+        }
+    }
+
+    private async Task CreateMessageOrChat(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        var messageDTO = new MessageDTO
+        {
+            Text = message,
+            MessageSenderType = MessageSenderTypeDTO.Patient
+        };
+
         chatDTO.Messages.Add(messageDTO);
 
         if (chatDTO.Messages.Count <= 2)
         {
-            await httpClientService.PostToAPIAsync("/chats", chatDTO);
+            chatDTO = await httpClientService.PostToAPIAsync("/chats", chatDTO);
+            Console.WriteLine(chatDTO.Id);
         }
         else
         {
-            await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}", messageDTO);
+            await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/messages", messageDTO);
         }
 
         currentMessageText = string.Empty;
