@@ -11,7 +11,21 @@ namespace Server.DomainFeatures.CounselingRessourceAggregate.Infrastructure
         {
             CounselingRessources = new List<CounselingRessource>()
             {
-                
+                new CounselingRessource
+                {
+                    Text = "",
+                    DomainType = Domain.CounselingDomainType.Fear
+                },
+                new CounselingRessource
+                {
+                    Text = "",
+                    DomainType = Domain.CounselingDomainType.Stress
+                },
+                new CounselingRessource
+                {
+                    Text = "",
+                    DomainType = Domain.CounselingDomainType.BreathingExercises
+                }
             };
         }
     }

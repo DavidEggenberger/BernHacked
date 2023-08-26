@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Server.Pages.Wiki
+namespace Server.Pages
 {
-    public class AntriebslosigkeitModel : PageModel
+    public class AtemübungenModel : PageModel
     {
         public void OnGet()
         {
