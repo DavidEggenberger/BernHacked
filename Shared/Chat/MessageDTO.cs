@@ -13,5 +13,6 @@ namespace Shared.Chat
         public MessageTypeDTO MessageType { get; set; }
         public MessageSenderTypeDTO MessageSenderType { get; set; }
         public string Base64Data { get; set; }
+        public List<string> Answers { get; set; }
     }
 }

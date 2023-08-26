@@ -1,6 +1,22 @@
-﻿@if(Message.MessageType == MessageTypeDTO.PulseExercise)
+﻿@inject HttpClientService httpClientService
+
+@if(Message.MessageType == MessageTypeDTO.PulseExercise)
 {
         
+}
+else if(Message.MessageType == MessageTypeDTO.Question)
+{
+    <div class="Message @Styling" style="@(Message.MessageType == MessageTypeDTO.Question ? "align-self: center; text-align: center;" : string.Empty)">
+        @Message.Text
+            <div class="AnswerSection">
+                @foreach(var answer in Message.Answers)
+                {
+                    <button @onclick="async() => await ChooseAnswerForQuestion(Message.Text, answer)">
+                        @answer
+                    </button>
+                }
+            </div>
+    </div>
 }
 else
 {
@@ -14,6 +30,9 @@ else
 @code {
     [Parameter]
     public MessageDTO Message { get; set; }
+
+    [Parameter]
+    public ChatDTO chat { get; set; }
 
     [CascadingParameter] 
     public IModalService Modal { get; set; } = default;
@@ -30,6 +49,11 @@ else
             ModalOpened = true;
             OpenExerciseModal();
         }
+    }
+
+    private async Task ChooseAnswerForQuestion(string question, string answer)
+    {
+        await httpClientService.PostToAPIAsync<MessageDTO>($"/chats/{chat.Id}/{question}/{answer}", null);
     }
 
     private string Styling => Message.MessageSenderType switch

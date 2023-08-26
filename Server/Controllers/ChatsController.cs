@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Server.Controllers
 {
@@ -69,6 +70,7 @@ namespace Server.Controllers
 
             if (true)
             {
+                chat.Messages.Add(new Message { Answers = new List<string> { "sadfasfd", "sdffdsadsf" }, Text = "Please Choose", MessageType = MessageType.Question });
                 chat.Messages.Add(new Message { MessageType = MessageType.PulseExercise });
             }
             //if (botService.CheckIfMessageIsBotHandable(message))
@@ -91,6 +93,21 @@ namespace Server.Controllers
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
 
             return Ok(chat.Messages.Select(x => x.ToDTO()));
+        }
+
+        /// <summary>
+        /// Add a message to an existing chat
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="answer"></param>
+        /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("{chatId}/{question}/{answer}")]
+        public ActionResult<MessageDTO> ChooseAnswerForMessageQuestion([FromRoute] int chatId, [FromRoute] string question, [FromRoute] string answer)
+        {
+            
+
+            return Ok();
         }
     }
 }

@@ -1,10 +1,13 @@
 ﻿@page "/"
 
 <div class="chatOverviewContainer">
-    <div>
-    </div>
-    <ChatComponent/>
+    <ChatConfigurationComponent Configurationupdated="(c) => Configurations = c"/>
+    <ChatComponent Configurations="Configurations"/>
     <div>
     </div>
 </div>
 
+@code{
+    private List<ChatConfigurationDTO> Configurations = new List<ChatConfigurationDTO>();
+
+}

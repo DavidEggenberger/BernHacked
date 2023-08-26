@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Shared.Chat
 {
-    public enum MessageTypeDTO
+    public enum ChatConfigurationDTO
     {
-        Text,
-        Voice,
-        Video,
-        PulseExercise,
-        Question
+        TextOnly,
+        Dominant,
+        Listening,
     }
 }

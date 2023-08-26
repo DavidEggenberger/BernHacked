@@ -5,6 +5,7 @@
         Text,
         Voice,
         Video,
-        PulseExercise
+        PulseExercise,
+        Question
     }
 }

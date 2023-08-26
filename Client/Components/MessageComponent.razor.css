@@ -3,7 +3,6 @@
     min-height: 25px;
     width: min-content;
     margin-bottom: 10px;
-    display: flex;
     align-items: center;
     justify-content: start;
     box-sizing: border-box;
@@ -25,4 +24,18 @@
     width: 100px;
     border-radius: 50%;
     background-color: white;
+}
+.AnswerSection{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    column-gap: 10px;
+}
+.Message button{
+    cursor: pointer;
+    background: none;
+    outline: none;
+    padding: 3px;
+    font-size: 15px;
+    border-radius: 3px;
 }

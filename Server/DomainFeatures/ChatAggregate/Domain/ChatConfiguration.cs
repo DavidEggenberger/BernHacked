@@ -1,6 +1,6 @@
 ﻿namespace Server.DomainFeatures.ChatAggregate.Domain
 {
-    public enum ChatOption
+    public enum ChatConfiguration
     {
         TextOnly,
         Dominant,

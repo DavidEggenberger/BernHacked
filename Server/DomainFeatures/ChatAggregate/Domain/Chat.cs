@@ -8,7 +8,7 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
     public class Chat
     {
         public int ChatId { get; set; }
-        public IList<ChatOption> ChatOptions { get; set; }
+        public IList<ChatConfiguration> ChatOptions { get; set; }
         public List<Message> Messages { get; set; }
 
 

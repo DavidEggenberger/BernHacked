@@ -1,0 +1,64 @@
+﻿<div class="ChatConfigurationComponentContainer">
+    <div class="Konfigurator" style='@(expanded ? "height: 300px;" : string.Empty)'>
+        <div class="ChatFlex" @onclick="() => Expand()" >
+            <h3>Konfigurieren sie den Chat </h3>
+            <img style='@(expanded ? "rotate: 180deg;" : string.Empty)' src="/down-arrow.png"/>
+        </div>
+        @if (expanded)
+        {
+            <div class="OptionsContainer">
+                @foreach(var configuration in AvailableChatConfigurations)
+                {
+                    <div @onclick="() => SelectConfiguration(configuration.Item2)" class="ConfigurationOption @(EnabledChatConfigurations.Contains(configuration.Item2) ? "Active" : string.Empty)">
+                        <h4>@configuration.Item1</h4>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code{
+    private bool expanded = false;
+
+    private List<ChatConfigurationDTO> EnabledChatConfigurations;
+    private List<(string, ChatConfigurationDTO)> AvailableChatConfigurations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EnabledChatConfigurations = new List<ChatConfigurationDTO>();
+        AvailableChatConfigurations = new List<(string, ChatConfigurationDTO)>
+        {
+            ("adsf", ChatConfigurationDTO.TextOnly),
+            ("adsfdasf", ChatConfigurationDTO.Listening)
+        };
+    }
+
+    private void SelectConfiguration(ChatConfigurationDTO chatConfigurationDTO)
+    {
+        if (EnabledChatConfigurations.Contains(chatConfigurationDTO))
+        {
+            EnabledChatConfigurations.Remove(EnabledChatConfigurations.FirstOrDefault(x => x == chatConfigurationDTO));
+        }
+        else
+        {
+            EnabledChatConfigurations.Add(chatConfigurationDTO);
+        }
+
+        if (Configurationupdated.HasDelegate)
+        {
+            Configurationupdated.InvokeAsync(EnabledChatConfigurations);
+        }
+
+        StateHasChanged();
+    }
+
+    private void Expand()
+    {
+        expanded = !expanded;
+        StateHasChanged();
+    }
+
+    [Parameter]
+    public EventCallback<List<ChatConfigurationDTO>> Configurationupdated { get; set; }
+}

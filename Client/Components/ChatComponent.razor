@@ -6,18 +6,24 @@
         {
             foreach(var message in chatDTO.Messages)
             {
-                <MessageComponent Message="message"/>            
+                <MessageComponent Message="message" chat="chatDTO"/>            
             }
         }
-        <div class="chatInputContainer">
-            <input @bind="currentMessageText" @bind:event="oninput" />
-            <img src="/enter.png"/>
-            <label>Zum Senden Enter drücken</label>
-        </div>
+        @if (chatDTO.Messages.Last().MessageType != MessageTypeDTO.Question)
+        {
+            <div class="chatInputContainer">
+                <input @bind="currentMessageText" @bind:event="oninput" />
+                <img src="/enter.png" />
+                <label>Zum Senden Enter drücken</label>
+            </div>
+        }
     </div>
 </div>
 
 @code{
+    [Parameter]
+    public List<ChatConfigurationDTO> Configurations { get; set; }
+
     private ChatDTO chatDTO;
     private string currentMessageText;
 
