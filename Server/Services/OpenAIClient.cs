@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace Server.Services
 {
@@ -11,20 +12,20 @@ namespace Server.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public OpenAIClient(string apiKey)
+        public OpenAIClient(IConfiguration configuration)
         {
-            _apiKey = apiKey;
+            _apiKey = configuration["OpenAI"];
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri("https://api.openai.com/v1/");
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         }
 
-        public async Task<string> SendPrompt(string prompt, string model)
+        public async Task<string> SendPrompt(string prompt)
         {
             var requestBody = new
             {
                 prompt = prompt,
-                model = "text-davinci-003",
+                model = "gpt-3.5-turbo",
                 max_tokens = 150,
                 temperature = 0.5
             };

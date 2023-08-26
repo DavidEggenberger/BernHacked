@@ -4,6 +4,7 @@
     {
         Text,
         Voice,
-        Video
+        Video,
+        PulseExercise
     }
 }

@@ -67,10 +67,14 @@ namespace Server.Controllers
 
             chat.AddMessage(message);
 
-            if (botService.CheckIfMessageIsBotHandable(message))
+            if (true)
             {
-                botService.AnswerToMessageAsync(chat, message);
+                chat.Messages.Add(new Message { MessageType = MessageType.PulseExercise });
             }
+            //if (botService.CheckIfMessageIsBotHandable(message))
+            //{
+            //    botService.AnswerToMessageAsync(chat, message);
+            //}
 
             return Ok();
         }

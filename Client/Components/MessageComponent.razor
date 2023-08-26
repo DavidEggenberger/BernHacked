@@ -1,14 +1,45 @@
-﻿<div class="Message @Styling">
-    @Message.Text
-</div>
+﻿@if(Message.MessageType == MessageTypeDTO.PulseExercise)
+{
+        
+}
+else
+{
+    <div class="Message @Styling" style="@(Message.MessageType == MessageTypeDTO.PulseExercise ? "align-self: center;" : string.Empty)">
+        @Message.Text
+    </div>
+}
+
+
 
 @code {
     [Parameter]
     public MessageDTO Message { get; set; }
+
+    [CascadingParameter] 
+    public IModalService Modal { get; set; } = default;
+
+    [Parameter]
+    public EventCallback CallBack { get; set; }
+
+    private bool ModalOpened = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Message.MessageType == MessageTypeDTO.PulseExercise && !ModalOpened)
+        {
+            ModalOpened = true;
+            OpenExerciseModal();
+        }
+    }
 
     private string Styling => Message.MessageSenderType switch
     {
         MessageSenderTypeDTO.Patient => "Patient",
         _ => "DargeboteneHand"
     };
+
+    private void OpenExerciseModal()
+    {
+        Modal.Show<BreathingExercise>();
+    }
 }

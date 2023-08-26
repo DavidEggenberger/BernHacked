@@ -1,3 +1,4 @@
+using Blazored.Modal;
 using Client.BuildingBlocks.Http;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ namespace Client
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
             builder.Services.AddScoped<HttpClientService>();
-
+            builder.Services.AddBlazoredModal();
 
 
             await builder.Build().RunAsync();

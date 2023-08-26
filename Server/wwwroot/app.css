@@ -79,3 +79,13 @@ main {
     border: 1px solid rgba( 255, 255, 255, 0.55 );
     box-shadow: 0 8px 32px 0 rgba(255,237,207,1);
 }
+.blazored-modal-header {
+    padding: 0 !important;
+}
+.blazored-modal{
+    padding: 10px !important;
+    box-shadow: none !important;
+}
+.blazored-modal-overlay{
+    background-color: rgba(255, 255, 255, 0.3);
+}

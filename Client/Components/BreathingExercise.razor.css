@@ -1,0 +1,12 @@
+﻿.BreathingContainer{
+    height: 350px;
+    width: 350px;
+    display: grid;
+    place-content: center;
+}
+.BreathingPulse {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-color: aqua;
+}

@@ -10,6 +10,7 @@ namespace Shared.Chat
     {
         Text,
         Voice,
-        Video
+        Video,
+        PulseExercise
     }
 }

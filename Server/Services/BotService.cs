@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Server.DomainFeatures.ChatAggregate.Domain;
 using Server.Hubs;
 using System;
@@ -8,9 +9,10 @@ namespace Server.Services
 {
     public class BotService
     {
-        
-        public BotService()
+        private readonly OpenAIClient openAIClient;
+        public BotService(OpenAIClient openAIClient)
         {
+            this.openAIClient = openAIClient;
         }
 
         public bool CheckIfMessageIsBotHandable(Message message)
@@ -23,7 +25,9 @@ namespace Server.Services
         {
             await Task.Delay(new Random().Next(2000, 4000));
 
-            
+            var result = await openAIClient.SendPrompt(message.Text);
+
+            chat.Messages.Add(new Message { Text = result });
         }
     }
 }

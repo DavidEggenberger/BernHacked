@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Server.Services
 {
@@ -8,6 +9,7 @@ namespace Server.Services
         {
             services.AddScoped<RandomGenerator>();
             services.AddScoped<BotService>();
+            services.AddScoped<OpenAIClient>();
 
             return services;
         }
