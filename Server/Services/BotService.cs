@@ -17,21 +17,29 @@ namespace Server.Services
             this.hubContext = hubContext;
         }
 
-        public bool CheckIfMessageIsBotHandable(Message message)
+        public async Task<bool> AnswerToMessageAsync(Chat chat, Message message)
         {
+            var result = await openAIClient.SendPrompt(message.Text);
 
-            return true;
-        }
+            if (await CheckIfMessageIsBotHandable(result) is false)
+            {
+                return false;
+            }
 
-        public async Task AnswerToMessageAsync(Chat chat, Message message)
-        {
+            
+
             await Task.Delay(new Random().Next(2000, 4000));
-
-            //var result = await openAIClient.SendPrompt(message.Text);
 
             chat.Messages.Add(new Message { MessageType = MessageType.Question, Text = "AtemÜbungen", Answers = new System.Collections.Generic.List<string> { "Ja", "Nein" } });
 
             await hubContext.Clients.All.SendAsync("Update");
+
+            return true;
+        }
+
+        private async Task<bool> CheckIfMessageIsBotHandable(string result)
+        {
+            return true;
         }
     }
 }

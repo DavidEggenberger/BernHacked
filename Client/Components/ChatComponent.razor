@@ -6,8 +6,18 @@
         {
             foreach(var message in chatDTO.Messages)
             {
-                <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>            
+                <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>
             }
+            @if(!Configurations.Any(c => c == ChatConfigurationDTO.OnlyHuman))
+            {
+                <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="botMessage" chat="chatDTO" />
+            }
+        }
+        @if (IsWaiting)
+        {
+            <div class="LoadingSpinner">
+                <div class="lds-ripple"><div></div><div></div></div>
+            </div>
         }
         @if (chatDTO.Messages.Last().MessageType != MessageTypeDTO.Question)
         {
@@ -25,6 +35,13 @@
 </div>
 
 @code{
+    private bool IsWaiting = false;
+    private MessageDTO botMessage = new MessageDTO
+    {
+        MessageType = MessageTypeDTO.SpecialInformation,
+        Text = "Der Chatbot führt sie in das Gespräch ein er sie an eine Fachperson weiterleited "
+    };
+
     [Parameter]
     public List<ChatConfigurationDTO> Configurations { get; set; }
 
@@ -41,6 +58,7 @@
         HubConnection.On("Update", async () =>
         {
             await GetMessagesForChat();
+            IsWaiting = false;
             StateHasChanged();
         });
     }
@@ -70,6 +88,7 @@
 
         chatDTO.Messages.Add(messageDTO);
 
+        IsWaiting = true;
         if (chatDTO.Messages.Count <= 2)
         {
             chatDTO = await httpClientService.PostToAPIAsync("/chats", chatDTO);

@@ -18,6 +18,16 @@ else if(Message.MessageType == MessageTypeDTO.Question)
             </div>
     </div>
 }
+else if(Message.MessageType == MessageTypeDTO.SpecialInformation)
+{
+    <div class="Message DargeboteneHand" style="align-self: center;">
+        @Message.Text
+        @if (Message.Bot)
+        {
+            <span>Bot generiert</span>
+        }
+    </div>
+}
 else
 {
     <div class="Message @Styling">

@@ -12,6 +12,7 @@ namespace Shared.Chat
         Voice,
         Video,
         PulseExercise,
-        Question
+        Question,
+        SpecialInformation
     }
 }

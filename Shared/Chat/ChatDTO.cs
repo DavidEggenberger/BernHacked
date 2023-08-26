@@ -17,6 +17,7 @@ namespace Shared.Chat
                 new MessageDTO
                 {
                     Text = "Wilkommen bei der Dargebotenen Hand",
+                    MessageType = MessageTypeDTO.SpecialInformation,
                     MessageSenderType = MessageSenderTypeDTO.DargeboteneHandBot
                 }
             };

@@ -20,6 +20,7 @@
     width: fit-content;
     align-items: center;
     cursor: pointer;
+    align-self: flex-start;
 }
 .Konfigurator img{
     margin-left: 5px;
@@ -51,7 +52,11 @@
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
+    font-size: 16px;
 }
-.Active{
-    background-color: gray;
+.OptionsContainer h4{
+    font-size: 14px;
+}
+.Active {
+    background-color: rgba(252, 136, 98, 0.5);
 }

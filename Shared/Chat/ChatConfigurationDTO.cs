@@ -11,6 +11,7 @@ namespace Shared.Chat
         TextOnly,
         Dominant,
         Listening,
-        Speech
+        Speech,
+        OnlyHuman
     }
 }

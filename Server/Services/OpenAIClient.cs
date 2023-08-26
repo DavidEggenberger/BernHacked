@@ -24,7 +24,12 @@ namespace Server.Services
         {
             var requestBody = new
             {
-                prompt = prompt,
+                prompt = $"Sie sind ein Psychologe und beaftragt sich um den Patienten zu kümmern. " +
+                $"Bitte antworten sie in kurzen und prägnanten Sätzen. Falls möglich" +
+                $"können sie dem Patienten eine Atemübung empfehlen." +
+                $"wenn sie sich nicht 100% sicher sind, dann beenden sie bitte die Konversation" +
+                $"indem sie Ihre Unsicherheit dem Patienten mitteilen"+
+                $"Der Patiente sagt; {prompt}",
                 model = "gpt-3.5-turbo",
                 max_tokens = 150,
                 temperature = 0.5

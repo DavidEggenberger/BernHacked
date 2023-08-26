@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Server.Controllers
@@ -44,7 +45,7 @@ namespace Server.Controllers
         /// <param name="chat"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult<ChatDTO> CreateChat(ChatDTO chatDTO)
+        public async Task<ActionResult<ChatDTO>> CreateChat(ChatDTO chatDTO)
         {
             chatDTO.Id = randomGenerator.GenerateRandomInt();
 
@@ -52,9 +53,8 @@ namespace Server.Controllers
             chatPersistence.AddChat(chat);
 
             var message = chat.Messages.Last();
-            if (botService.CheckIfMessageIsBotHandable(message))
-            {
-                botService.AnswerToMessageAsync(chat, message);
+            if (await botService.AnswerToMessageAsync(chat, message))
+            { 
             }
 
             return Ok(chat.ToDTO());
@@ -68,16 +68,15 @@ namespace Server.Controllers
         /// <returns></returns>
         [Tags("Messages")]
         [HttpPost("{chatId}/messages")]
-        public ActionResult CreateMessageInChat([FromRoute] int chatId, MessageDTO messageDTO)
+        public async Task<ActionResult> CreateMessageInChat([FromRoute] int chatId, MessageDTO messageDTO)
         {
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
             Message message = Message.FromDTO(messageDTO);
 
             chat.AddMessage(message);
 
-            if (botService.CheckIfMessageIsBotHandable(message))
+            if (await botService.AnswerToMessageAsync(chat, message))
             {
-                botService.AnswerToMessageAsync(chat, message);
             }
 
             return Ok();
