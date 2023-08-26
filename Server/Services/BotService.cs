@@ -19,12 +19,12 @@ namespace Server.Services
 
         public async Task<bool> AnswerToMessageAsync(Chat chat, Message message)
         {
-            var result = await openAIClient.SendPrompt(message.Text);
+            //var result = await openAIClient.SendPrompt(message.Text);
 
-            if (await CheckIfMessageIsBotHandable(result) is false)
-            {
-                return false;
-            }
+            //if (await CheckIfMessageIsBotHandable(result) is false)
+            //{
+            //    return false;
+            //}
 
             
 

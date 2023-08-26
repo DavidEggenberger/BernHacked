@@ -31,7 +31,7 @@ namespace Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
             services.AddSignalR();
 
             services.AddAuthentication()

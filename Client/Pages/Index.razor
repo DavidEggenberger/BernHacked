@@ -3,8 +3,8 @@
 
 <CascadingValue Value="HubConnection">
     <div class="chatOverviewContainer">
-        <ChatConfigurationComponent Configurationupdated="(c) => Configurations = c"/>
-        <ChatComponent Configurations="Configurations"/>
+        <ChatConfigurationComponent Configurationupdated="async (c) => { Configurations = c; StateHasChanged(); await chatComponent.UpdateConfigurations(Configurations); StateHasChanged();}"/>
+        <ChatComponent @ref="chatComponent" Configurations="Configurations"/>
     <div>
     </div>
     </div>
@@ -13,6 +13,8 @@
 
 @code{
     private List<ChatConfigurationDTO> Configurations = new List<ChatConfigurationDTO>();
+
+    private ChatComponent chatComponent = new ChatComponent();
 
     public HubConnection HubConnection { get; set; }
 

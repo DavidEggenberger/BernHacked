@@ -61,6 +61,19 @@ namespace Server.Controllers
         }
 
         /// <summary>
+        /// Create a new chat
+        /// </summary>
+        /// <param name="chat"></param>
+        /// <returns></returns>
+        [HttpPost("{chatId}/configuration")]
+        public async Task<ActionResult<ChatDTO>> UpdateConfigurationOfChat([FromRoute] int chatId, [FromBody] List<ChatConfigurationDTO> chatConfigurationDTOs)
+        {
+            
+
+            return Ok(null);
+        }
+
+        /// <summary>
         /// Add a message to an existing chat
         /// </summary>
         /// <param name="chatId"></param>

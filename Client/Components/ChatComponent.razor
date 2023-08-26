@@ -7,10 +7,13 @@
             foreach(var message in chatDTO.Messages)
             {
                 <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>
-            }
-            @if(!Configurations.Any(c => c == ChatConfigurationDTO.OnlyHuman))
-            {
-                <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="botMessage" chat="chatDTO" />
+                @if(message.MessageType == MessageTypeDTO.SpecialInformation)
+                {
+                    if (Configurations.All(c => c != ChatConfigurationDTO.OnlyHuman))
+                    {
+                        <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="botMessage" chat="chatDTO" />
+                    }
+                }
             }
         }
         @if (IsWaiting)
@@ -39,11 +42,16 @@
     private MessageDTO botMessage = new MessageDTO
     {
         MessageType = MessageTypeDTO.SpecialInformation,
-        Text = "Der Chatbot führt sie in das Gespräch ein er sie an eine Fachperson weiterleited "
+        Text = "Der Chatbot started das Gespräch, bis eine Fachperson übernimmt"
     };
 
     [Parameter]
     public List<ChatConfigurationDTO> Configurations { get; set; }
+
+    public async Task UpdateConfigurations(List<ChatConfigurationDTO> Configurations)
+    {
+        await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/configuration", Configurations);
+    }
 
     [CascadingParameter]
     public HubConnection HubConnection { get; set; }
@@ -57,7 +65,10 @@
 
         HubConnection.On("Update", async () =>
         {
-            await GetMessagesForChat();
+            if (chatDTO?.Id != 0)
+            {
+                await GetMessagesForChat();
+            }
             IsWaiting = false;
             StateHasChanged();
         });
