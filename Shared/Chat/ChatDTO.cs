@@ -16,7 +16,7 @@ namespace Shared.Chat
             {
                 new MessageDTO
                 {
-                    Text = "Wilkommen bei uns",
+                    Text = "Wilkommen bei der Dargebotenen Hand",
                     MessageSenderType = MessageSenderTypeDTO.DargeboteneHandBot
                 }
             };

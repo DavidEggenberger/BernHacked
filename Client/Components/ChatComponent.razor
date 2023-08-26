@@ -6,7 +6,7 @@
         {
             foreach(var message in chatDTO.Messages)
             {
-                <MessageComponent Message="message" chat="chatDTO"/>            
+                <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>            
             }
         }
         @if (chatDTO.Messages.Last().MessageType != MessageTypeDTO.Question)

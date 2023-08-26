@@ -38,8 +38,8 @@ section {
         outline: none;
         background: none;
         border-radius: 5px;
-        height: 30px;
-        font-size: 20px;
+        height: 26px;
+        font-size: 18px;
         cursor: pointer;
         transition: 0.5s;
         transition-timing-function: linear;
@@ -56,3 +56,13 @@ section {
             padding: 25px 15px 35px 15px;
             box-sizing: border-box;
         }
+select {
+    margin-left: 20px;
+    outline: none;
+    background: none;
+    border-radius: 5px;
+    height: 26px;
+    font-size: 18px;
+    cursor: pointer;
+    border: 2px solid black;
+}

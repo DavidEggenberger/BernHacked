@@ -20,8 +20,12 @@ else if(Message.MessageType == MessageTypeDTO.Question)
 }
 else
 {
-    <div class="Message @Styling" style="@(Message.MessageType == MessageTypeDTO.PulseExercise ? "align-self: center;" : string.Empty)">
+    <div class="Message @Styling">
         @Message.Text
+        @if (Message.Bot)
+        {
+            <span>Bot generiert</span>
+        }
     </div>
 }
 
@@ -54,11 +58,16 @@ else
     private async Task ChooseAnswerForQuestion(string question, string answer)
     {
         await httpClientService.PostToAPIAsync<MessageDTO>($"/chats/{chat.Id}/{question}/{answer}", null);
+        if (CallBack.HasDelegate)
+        {
+            await CallBack.InvokeAsync(this);
+        }
     }
 
-    private string Styling => Message.MessageSenderType switch
+    private string Styling => (Message.MessageSenderType, Message.Bot) switch
     {
-        MessageSenderTypeDTO.Patient => "Patient",
+        (MessageSenderTypeDTO.Patient, _) => "Patient",
+        (_, true) => "DargeboteneHand Bot",
         _ => "DargeboteneHand"
     };
 

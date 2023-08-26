@@ -5,8 +5,36 @@
     place-content: center;
 }
 .BreathingPulse {
-    height: 150px;
-    width: 150px;
+    height: 100px;
+    width: 100px;
     border-radius: 50%;
     background-color: aqua;
+    position: relative;
 }
+.BreathingPulse:before,
+.BreathingPulse:after{
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: blue;
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.7;
+}
+.BreathingPulse:before{
+    z-index: -2;
+    background-color: rebeccapurple;
+    animation: pulse 10s ease-in-out infinite;
+}
+    .BreathingPulse:after {
+        animation: pulse 10s ease-in-out infinite;
+    }
+    @keyframes pulse{
+        0%, 100%{
+            transform: scale(1);
+        }
+        50%{
+            transform: scale(2.5);
+        }
+    }

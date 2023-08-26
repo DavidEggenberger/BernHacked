@@ -29,7 +29,7 @@ namespace Server.Services
 
             //var result = await openAIClient.SendPrompt(message.Text);
 
-            chat.Messages.Add(new Message { Text = "hello" });
+            chat.Messages.Add(new Message { MessageType = MessageType.Question, Text = "AtemÜbungen", Answers = new System.Collections.Generic.List<string> { "Ja", "Nein" } });
 
             await hubContext.Clients.All.SendAsync("Update");
         }

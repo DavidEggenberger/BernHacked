@@ -109,7 +109,22 @@ namespace Server.Controllers
         {
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
 
-            
+            if (question.ToLower().Contains("AtemÜbungen".ToLower()) && answer.ToLower() == "ja")
+            {
+                chat.Messages.Add(new Message
+                {
+                    MessageType = MessageType.PulseExercise
+                });
+                chat.Messages.Add(new Message
+                {
+                    Text = "Hoffentlich konnten sie sich entspannen",
+                    MessageType = MessageType.Text
+                });
+            }
+            if (answer.ToLower().Contains("Video".ToLower()))
+            {
+
+            }
 
             return Ok();
         }
