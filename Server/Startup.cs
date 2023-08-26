@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Server.DomainFeatures.ChatAggregate;
 using Server.Services;
 using System;
@@ -28,6 +29,22 @@ namespace Server
             services.AddRazorPages();
             services.AddControllers();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Dargebotene Hand",
+                        Version = "v1",
+                        Description = "Open API of Dargebotene Hand",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "David Eggenberger"
+                        }
+                    });
+                
+            });
+
             services.RegisterChatModule();
 
             services.RegisterServices();
@@ -50,6 +67,13 @@ namespace Server
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.InjectStylesheet("/swaggerStyles.css");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
 
             app.UseRouting();
 

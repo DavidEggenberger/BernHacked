@@ -7,6 +7,7 @@ namespace Server.Services
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddScoped<RandomGenerator>();
+            services.AddScoped<BotService>();
 
             return services;
         }

@@ -8,11 +8,9 @@ namespace Server.Services
 {
     public class BotService
     {
-        private readonly IHubContext<NotificationHub, INotificationHub> hubContext;
         
-        public BotService(IHubContext<NotificationHub, INotificationHub> hubContext)
+        public BotService()
         {
-            this.hubContext = hubContext;
         }
 
         public bool CheckIfMessageIsBotHandable(Message message)

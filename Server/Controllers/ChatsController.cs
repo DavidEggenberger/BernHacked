@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Server.DomainFeatures.ChatAggregate.Domain;
 using Server.DomainFeatures.ChatAggregate.Infrastructure;
 using Server.Services;
 using Shared.Chat;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +25,23 @@ namespace Server.Controllers
             this.botService = botService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <returns></returns>
         [HttpGet("{chatId}")]
         public ActionResult<ChatDTO> Get(int chatId)
         {
             return Ok(chatPersistence.Chats.Single(c => c.ChatId == chatId));
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chat"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult CreateChat(ChatDTO chat)
         {
@@ -39,6 +52,13 @@ namespace Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="chatId"></param>
+        /// <param name="messageDTO"></param>
+        /// <returns></returns>
+        [Tags("Messages")]
         [HttpPost("messages/{chatId}")]
         public ActionResult CreateMessageInChat([FromRoute] int chatId, MessageDTO messageDTO)
         {
