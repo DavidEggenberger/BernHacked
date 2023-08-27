@@ -32,9 +32,13 @@ namespace Server.Services
                 "Probieren sie freundlich, präzise und prägnant zu antworten. " +
                 "Die Antwort sollte höchsten 8 wörter lang sein.");
 
-            aiChat.AppendUserInput("Was kannst du mir empfehlen?");
+            aiChat.AppendUserInput("Ich bin wütend, was kannst du mir empfehlen?");
             aiChat.AppendExampleChatbotOutput("Ich kann dir eine Atemübung empfehlen");
-            aiChat.AppendUserInput("Kannst du mir etwas empfehlen?");
+            aiChat.AppendUserInput("Ich bin ängstlich, was kannst du mir empfehlen?");
+            aiChat.AppendExampleChatbotOutput("Ich kann dir eine Atemübung empfehlen");
+            aiChat.AppendUserInput("was kannst du für mein Wohlbefinden empfehlen?");
+            aiChat.AppendExampleChatbotOutput("Ich kann dir eine Atemübung empfehlen");
+            aiChat.AppendUserInput("Mich belastet vieles, was Kannst du mir empfehlen?");
             aiChat.AppendExampleChatbotOutput("Ich kann dir eine Atemübung empfehlen");
             aiChat.AppendUserInput("Was würdest du mir empfehlen?");
             aiChat.AppendExampleChatbotOutput("Ich kann dir eine Atemübung empfehlen");

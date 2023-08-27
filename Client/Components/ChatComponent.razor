@@ -10,7 +10,7 @@
             foreach(var message in chatDTO.Messages)
             {
                 <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>
-                @if(message.MessageType == MessageTypeDTO.SpecialInformation && chatDTO.Messages.Count <= 2)
+                @if (message.MessageType == MessageTypeDTO.SpecialInformation && message.Text.Contains("Wilkommen"))
                 {
                     if (Configurations.All(c => c != ChatConfigurationDTO.OnlyHuman))
                     {
@@ -32,7 +32,7 @@
         @if (chatDTO.Messages.Last().MessageType != MessageTypeDTO.Question)
         {
             <div class="chatInputContainer">
-                <input @bind="currentMessageText" @bind:event="oninput" />
+                <textarea @bind="currentMessageText" @bind:event="oninput" />
                 <img src="/enter.png" />
                 <label>Zum Senden Enter drücken</label>
                 @if (Configurations.Contains(ChatConfigurationDTO.Speech))
@@ -190,30 +190,6 @@
     {
         recording = false;
 
-        await Task.Delay(900);
-
-        var messageDTO = new MessageDTO
-        {
-            MessageType = MessageTypeDTO.Voice,
-            MessageSenderType = MessageSenderTypeDTO.Patient,
-            Base64Data = recordedMediaAsBase64,
-            Text = currentVoiceText
-        };
-
-        chatDTO.Messages.Add(messageDTO);
-
-        IsWaiting = true;
-        if (chatDTO.Messages.Count <= 2)
-        {
-            chatDTO = await httpClientService.PostToAPIAsync("/chats", chatDTO);
-        }
-        else
-        {
-            await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/messages", messageDTO);
-        }
-
-
-        await GetMessagesForChat();
         StateHasChanged();
     }
 
@@ -222,6 +198,7 @@
     {
         var v = s.Substring("[object Object]".Count());
         currentVoiceText = v;
+        currentMessageText = currentVoiceText;
 
         StateHasChanged();
     }

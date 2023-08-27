@@ -41,15 +41,14 @@ else if(Message.MessageType == MessageTypeDTO.Voice)
     }
     else
     {
-        <div class="Message" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
-        <audio style="height: 60px; width: 190px;" controls src="@("data:audio/webm;base64," + Message.Base64Data)"></audio>
-        @if (Message.Bot)
-        {
-            <span>Bot generiert</span>
-        }
+        <div class="Message @Styling" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
+            @Message.Text
+            @if (Message.Bot)
+            {
+                <span>Bot generiert</span>
+            }
         </div>
     }
-    
 }
 else
 {
