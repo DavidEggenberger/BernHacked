@@ -59,7 +59,7 @@ namespace Server.Services
             aiChat.AppendUserInput(message.Text);
 
             var keywords3 = new List<string>() { "suche", "tipps", "geben", "zeigen", "tutorial", "gib", "zeig" };
-            if (keywords3.Where(x => message.Text.ToLower().Contains(x)).Count() > 1)
+            if (keywords3.Where(x => message?.Text?.ToLower().Contains(x) == true).Count() > 1)
             {
                 chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.Question, Text = "Darf ich dich in unser Wiki weiterleiten?", Answers = new List<string> { "Ja", "Nein" } });
 
@@ -106,7 +106,7 @@ namespace Server.Services
                 }
             }
 
-            await Task.Delay(new Random().Next(2000, 4000));
+            await Task.Delay(new Random().Next(500, 1000));
 
             await hubContext.Clients.All.SendAsync("Update");
 
