@@ -1,4 +1,7 @@
 ﻿@inject HttpClientService httpClientService
+@inject IJSRuntime JSRuntime
+@using System.Text
+@using Shared
 
 <div class="chatComponentContainer">
     <div class="chatOverview" @onkeydown="async(c) => await HandleKeyDown(c)">
@@ -30,7 +33,14 @@
                 <label>Zum Senden Enter drücken</label>
                 @if (Configurations.Contains(ChatConfigurationDTO.Speech))
                 {
-                    <img class="Microphone" src="/microphone.png"/>
+                    @if(recording is false)
+                    {
+                        <img @onclick="async () => await StartMicrophoneRecordingAsync()" class="Microphone" src="/microphone.png"/>
+                    }
+                    else
+                    {
+                        <img class="Microphone" id="btnStop" @onclick="async () => await StopMicrophoneRecordingAsync()" src="/microphoneRecording.png" />
+                    }
                 }
             </div>
         }
@@ -38,6 +48,7 @@
 </div>
 
 @code{
+    private bool recording;
     private bool IsWaiting = false;
     private MessageDTO botMessage = new MessageDTO
     {
@@ -45,12 +56,26 @@
         Text = "Der Chatbot started das Gespräch, bis eine Fachperson übernimmt"
     };
 
+    AzureCognitiveServicesTokenDTO token;
+
     [Parameter]
     public List<ChatConfigurationDTO> Configurations { get; set; }
 
     public async Task UpdateConfigurations(List<ChatConfigurationDTO> Configurations)
     {
-        await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/configuration", Configurations);
+        if (chatDTO.Id == 0)
+        {
+            chatDTO.Configurations = Configurations;
+
+            return;
+        }
+
+        var container = new ChatConfigurationContainer
+        {
+            Configurations = Configurations
+        };
+
+        await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/configuration", container);
     }
 
     [CascadingParameter]
@@ -58,10 +83,13 @@
 
     private ChatDTO chatDTO;
     private string currentMessageText;
+    private string currentVoiceText;
 
     protected override async Task OnInitializedAsync()
     {
         chatDTO = new ChatDTO();
+
+        token = await httpClientService.GetFromAPIAsync<AzureCognitiveServicesTokenDTO>("/AzureSpeech");
 
         HubConnection.On("Update", async () =>
         {
@@ -79,8 +107,6 @@
         if (args.Key == "Enter")
         {
             await CreateMessageOrChat(currentMessageText);
-
-            currentMessageText = string.Empty;
         }
     }
 
@@ -97,6 +123,8 @@
             MessageSenderType = MessageSenderTypeDTO.Patient
         };
 
+        currentMessageText = string.Empty;
+
         chatDTO.Messages.Add(messageDTO);
 
         IsWaiting = true;
@@ -109,8 +137,7 @@
             await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/messages", messageDTO);
         }
 
-        currentMessageText = string.Empty;
-        
+
         await GetMessagesForChat();
         StateHasChanged();
     }
@@ -119,5 +146,73 @@
     {
         var messages = await httpClientService.GetFromAPIAsync<IEnumerable<MessageDTO>>($"/chats/{chatDTO.Id}/messages");
         chatDTO.Messages = messages.ToList();
+    }
+
+    List<byte> bytes;
+    string recordedMediaAsBase64;
+
+    public async Task StartMicrophoneRecordingAsync()
+    {
+        recording = true;
+        bytes = new List<byte>();
+        await JSRuntime.InvokeVoidAsync("analyzeMicrophone", DotNetObjectReference.Create(this), "de-CH", token.Token);
+        await JSRuntime.InvokeVoidAsync("recordMicrophone", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void ScreenRecordedCallback(string s)
+    {
+        foreach (var item in Convert.FromBase64String(s))
+        {
+            bytes.Add(item);
+        }
+
+    }
+
+    [JSInvokable]
+    public void Finished()
+    {
+        recordedMediaAsBase64 = Convert.ToBase64String(bytes.ToArray());
+        StateHasChanged();
+    }
+
+    public async Task StopMicrophoneRecordingAsync()
+    {
+        recording = false;
+
+        await Task.Delay(900);
+
+        var messageDTO = new MessageDTO
+        {
+            MessageType = MessageTypeDTO.Voice,
+            MessageSenderType = MessageSenderTypeDTO.Patient,
+            Base64Data = recordedMediaAsBase64,
+            Text = currentVoiceText
+        };
+
+        chatDTO.Messages.Add(messageDTO);
+
+        IsWaiting = true;
+        if (chatDTO.Messages.Count <= 2)
+        {
+            chatDTO = await httpClientService.PostToAPIAsync("/chats", chatDTO);
+        }
+        else
+        {
+            await httpClientService.PostToAPIAsync($"/chats/{chatDTO.Id}/messages", messageDTO);
+        }
+
+
+        await GetMessagesForChat();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void MicrophoneAnalyzedCallback(string s, string li)
+    {
+        var v = s.Substring("[object Object]".Count());
+        currentVoiceText = v;
+
+        StateHasChanged();
     }
 }

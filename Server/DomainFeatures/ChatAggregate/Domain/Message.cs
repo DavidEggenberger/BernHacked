@@ -1,4 +1,5 @@
 ﻿using Shared.Chat;
+using System;
 using System.Collections.Generic;
 
 namespace Server.DomainFeatures.ChatAggregate.Domain
@@ -11,6 +12,7 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
         public MessageType MessageType { get; set; }
         public MessageSenderType MessageSenderType { get; set; }
         public List<string> Answers { get; set; }
+        public DateTime SentAt { get; set; }
 
         public static Message FromDTO(MessageDTO messageDTO)
         {
@@ -21,6 +23,7 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
                 MessageType = (MessageType)messageDTO.MessageType,
                 Base64Data = messageDTO.Base64Data,
                 Bot = messageDTO.Bot,
+                SentAt = messageDTO.SentAt,
             };
         }
 
@@ -34,6 +37,7 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
                 Base64Data = this.Base64Data,
                 Answers = this.Answers,
                 Bot = this.Bot,
+                SentAt = this.SentAt
             };
         }
     }

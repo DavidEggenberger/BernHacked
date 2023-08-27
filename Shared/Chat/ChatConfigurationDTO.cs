@@ -14,4 +14,8 @@ namespace Shared.Chat
         Speech,
         OnlyHuman
     }
+    public class ChatConfigurationContainer
+    {
+        public List<ChatConfigurationDTO> Configurations { get; set; }
+    }
 }

@@ -23,6 +23,7 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
             {
                 ChatId = chatDTO.Id,
                 Messages = chatDTO.Messages.Select(x => Message.FromDTO(x)).ToList(),
+                ChatOptions = chatDTO.Configurations?.Select(x => (ChatConfiguration)x)?.ToList()
             };
         }
 
@@ -31,7 +32,8 @@ namespace Server.DomainFeatures.ChatAggregate.Domain
             return new ChatDTO
             {
                 Id = this.ChatId,
-                Messages = Messages.Select(x => x.ToDTO()).ToList()
+                Messages = Messages.Select(x => x.ToDTO()).ToList(),
+                Configurations = ChatOptions?.Select(x => (ChatConfigurationDTO)x)?.ToList()
             };
         }
     }

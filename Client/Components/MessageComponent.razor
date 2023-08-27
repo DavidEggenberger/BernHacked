@@ -1,8 +1,10 @@
 ﻿@inject HttpClientService httpClientService
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Web
 
 @if(Message.MessageType == MessageTypeDTO.PulseExercise)
 {
-        
+    
 }
 else if(Message.MessageType == MessageTypeDTO.Question)
 {
@@ -22,6 +24,16 @@ else if(Message.MessageType == MessageTypeDTO.SpecialInformation)
 {
     <div class="Message DargeboteneHand" style="align-self: center;">
         @Message.Text
+        @if (Message.Bot)
+        {
+            <span>Bot generiert</span>
+        }
+    </div>
+}
+else if(Message.MessageType == MessageTypeDTO.Voice)
+{
+    <div class="Message" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
+       <audio style="height: 60px; width: 190px;" controls src="@("data:audio/webm;base64," + Message.Base64Data)"></audio>
         @if (Message.Bot)
         {
             <span>Bot generiert</span>
@@ -67,7 +79,7 @@ else
 
     private async Task ChooseAnswerForQuestion(string question, string answer)
     {
-        await httpClientService.PostToAPIAsync<MessageDTO>($"/chats/{chat.Id}/{question}/{answer}", null);
+        await httpClientService.PostToAPIAsync<MessageDTO>($"/chats/{chat.Id}/{answer}", Message);
         if (CallBack.HasDelegate)
         {
             await CallBack.InvokeAsync(this);

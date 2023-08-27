@@ -9,6 +9,7 @@ using Server.DomainFeatures.ChatAggregate;
 using Server.DomainFeatures.CounselingRessourceAggregate;
 using Server.Hubs;
 using Server.Services;
+using Server.Services.AzureSpeech;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +57,17 @@ namespace Server
                     });
                 
             });
+            services.Configure<AzureSpeechAnalysisOptions>(options =>
+            {
+                //options.Endpoint = Configuration["AzureSpeechAnalysisEndpoint"];
+                options.APIKey = Configuration["AzureSpeechAnalysisAPIKey"];
+            });
+            services.AddHttpClient<AzureSpeechAnalysisAPIClient>(options =>
+            {
+                options.BaseAddress = new Uri("https://switzerlandnorth.api.cognitive.microsoft.com/sts/v1.0/");
+            });
+            services.AddScoped<AzureSpeechToTextService>();
+            services.AddScoped<TextToSpeechService>();
 
             services.RegisterChatModule();
             services.RegisterCounselingRessourcesModule();

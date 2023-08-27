@@ -9,7 +9,6 @@ namespace Server.Services
         {
             services.AddScoped<RandomGenerator>();
             services.AddScoped<BotService>();
-            services.AddScoped<OpenAIClient>();
 
             return services;
         }

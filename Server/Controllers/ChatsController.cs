@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Server.DomainFeatures.ChatAggregate.Domain;
 using Server.DomainFeatures.ChatAggregate.Infrastructure;
+using Server.Hubs;
 using Server.Services;
 using Shared.Chat;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -49,7 +53,13 @@ namespace Server.Controllers
         {
             chatDTO.Id = randomGenerator.GenerateRandomInt();
 
+            foreach (var messages in chatDTO.Messages)
+            {
+                messages.SentAt = DateTime.Now;
+            }
+
             var chat = Chat.FromDTO(chatDTO);
+
             chatPersistence.AddChat(chat);
 
             var message = chat.Messages.Last();
@@ -66,11 +76,13 @@ namespace Server.Controllers
         /// <param name="chat"></param>
         /// <returns></returns>
         [HttpPost("{chatId}/configuration")]
-        public async Task<ActionResult<ChatDTO>> UpdateConfigurationOfChat([FromRoute] int chatId, [FromBody] List<ChatConfigurationDTO> chatConfigurationDTOs)
+        public async Task<ActionResult<ChatDTO>> UpdateConfigurationOfChat([FromRoute] int chatId, [FromBody] ChatConfigurationContainer chatConfigurationDTOs)
         {
-            
+            Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
 
-            return Ok(null);
+            chat.ChatOptions = chatConfigurationDTOs.Configurations.Select(x => (ChatConfiguration)x).ToList();
+
+            return Ok(chat.ToDTO());
         }
 
         /// <summary>
@@ -83,6 +95,8 @@ namespace Server.Controllers
         [HttpPost("{chatId}/messages")]
         public async Task<ActionResult> CreateMessageInChat([FromRoute] int chatId, MessageDTO messageDTO)
         {
+            messageDTO.SentAt = DateTime.Now;
+
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
             Message message = Message.FromDTO(messageDTO);
 
@@ -116,12 +130,14 @@ namespace Server.Controllers
         /// <param name="answer"></param>
         /// <returns></returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpPost("{chatId}/{question}/{answer}")]
-        public ActionResult<MessageDTO> ChooseAnswerForMessageQuestion([FromRoute] int chatId, [FromRoute] string question, [FromRoute] string answer)
+        [HttpPost("{chatId}/{answer}")]
+        public async Task<ActionResult<MessageDTO>> ChooseAnswerForMessageQuestion([FromServices] IHubContext<NotificationHub> hubContext, [FromRoute] int chatId, [FromBody] MessageDTO message, [FromRoute] string answer)
         {
+            var question = message.Text;
+
             Chat chat = chatPersistence.Chats.Single(x => x.ChatId == chatId);
 
-            if (question.ToLower().Contains("AtemÜbungen".ToLower()) && answer.ToLower() == "ja")
+            if (question.ToLower().Contains("Atem".ToLower()) && answer.ToLower() == "ja")
             {
                 chat.Messages.Add(new Message
                 {
@@ -137,6 +153,16 @@ namespace Server.Controllers
             {
 
             }
+            if(answer.ToLower() == "nein")
+            {
+                chat.Messages.Add(new Message
+                {
+                    Text = "Wie kann ich dir sonst weiterhelfen?",
+                    MessageType = MessageType.Text
+                });
+            }
+
+            await hubContext.Clients.All.SendAsync("Update");
 
             return Ok();
         }
