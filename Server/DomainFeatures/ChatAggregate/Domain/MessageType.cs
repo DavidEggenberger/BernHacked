@@ -6,6 +6,8 @@
         Voice,
         Video,
         PulseExercise,
-        Question
+        Question,
+        SpecialInformation,
+        Link
     }
 }

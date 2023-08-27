@@ -12,6 +12,9 @@
 .DargeboteneHand {
     background-color: rgba(252, 136, 98, 0.5);
     align-self: flex-end;
+    white-space: normal;
+    min-width: 300px;
+    max-width: 400px;
 }
 .Patient {
     background-color: rgba(20, 136, 98, 0.5);

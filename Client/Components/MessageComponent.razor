@@ -86,6 +86,10 @@ else
             ModalOpened = true;
             OpenExerciseModal();
         }
+        if (Message.MessageType == MessageTypeDTO.Link)
+        {
+            navigationManager.NavigateTo("/stressimberuf", true);
+        }
     }
 
     private async Task ChooseAnswerForQuestion(string question, string answer)

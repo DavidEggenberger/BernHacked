@@ -149,9 +149,12 @@ namespace Server.Controllers
                     MessageType = MessageType.Text
                 });
             }
-            if (answer.ToLower().Contains("Video".ToLower()))
+            if (question.ToLower().Contains("Wiki".ToLower()) && answer.ToLower() == "ja")
             {
-
+                chat.Messages.Add(new Message
+                {
+                    MessageType = MessageType.Link
+                });
             }
             if(answer.ToLower() == "nein")
             {

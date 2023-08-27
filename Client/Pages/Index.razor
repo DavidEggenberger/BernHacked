@@ -2,12 +2,20 @@
 @inject NavigationManager navigationManager
 
 <CascadingValue Value="HubConnection">
-    <div class="chatOverviewContainer">
-        <ChatConfigurationComponent Configurationupdated="async (c) => { Configurations = c; StateHasChanged(); await chatComponent.UpdateConfigurations(Configurations); StateHasChanged();}"/>
-        <ChatComponent @ref="chatComponent" Configurations="Configurations"/>
-    <div>
-    </div>
-    </div>
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <Authorized>
+            
+
+        </Authorized>
+        <NotAuthorized>
+            <div class="chatOverviewContainer">
+                <ChatConfigurationComponent Configurationupdated="async (c) => { Configurations = c; StateHasChanged(); await chatComponent.UpdateConfigurations(Configurations); StateHasChanged();}" />
+                <ChatComponent @ref="chatComponent" Configurations="Configurations" />
+                <div>
+                </div>
+            </div>
+        </NotAuthorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 </CascadingValue>
 
 

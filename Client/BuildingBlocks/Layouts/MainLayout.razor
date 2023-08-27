@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
 
 <div class="page">
     <nav>
@@ -17,11 +18,22 @@
                     Explore our API
                 </button>
             </a>    
-            <a href="Login">
-                <button>
-                    Admin Login
-                </button>
-            </a>   
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                <Authorized>
+                    <a href="api/bffuser/logout">
+                        <button>
+                            Logout
+                        </button>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="Login">
+                        <button>
+                            Login
+                        </button>
+                    </a>
+                </NotAuthorized>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         </section>
     </nav>
     <main>

@@ -49,9 +49,26 @@ namespace Server.Services
             aiChat.AppendUserInput("Ich suche Tipps zur Stressbewältigung");
             aiChat.AppendExampleChatbotOutput("Ich kann dir unseren Wiki Eintrag zur Stressbewältigung empfehlen");
 
+            aiChat.AppendUserInput("Ich suche dringend Hilfe");
+            aiChat.AppendExampleChatbotOutput("Ich bin als Chatbot nicht geeignet dir weiter zu helfen");
+            aiChat.AppendUserInput("Ich bin dringend auf Hilfe angewiesen");
+            aiChat.AppendExampleChatbotOutput("Ich bin als Chatbot nicht geeignet dir weiter zu helfen");
+            aiChat.AppendUserInput("Hilfe sofort");
+            aiChat.AppendExampleChatbotOutput("Ich bin als Chatbot nicht geeignet dir weiter zu helfen");
 
             aiChat.AppendUserInput(message.Text);
-            
+
+            var keywords3 = new List<string>() { "suche", "tipps", "geben", "zeigen", "tutorial", "gib", "zeig" };
+            if (keywords3.Where(x => message.Text.ToLower().Contains(x)).Count() > 1)
+            {
+                chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.Question, Text = "Darf ich dich in unser Wiki weiterleiten?", Answers = new List<string> { "Ja", "Nein" } });
+
+                await hubContext.Clients.All.SendAsync("Update");
+
+                return false;
+            }
+
+
             if(message.Text == null)
             {
                 chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.Text, Text = "Auf ihre Anfrage findet der ChatBot leider keine Antwort" });
@@ -63,16 +80,18 @@ namespace Server.Services
 
             string response = await aiChat.GetResponseFromChatbotAsync();
             
-            if (await CheckIfMessageIsBotHandable(result) is false)
-            {
-                return false;
-            }
+            
 
             var keyWords = new List<string> { "meditation", "atemübung", "achtsamkeitsübung " };
+            var keyWords1 = new List<string> { "kontaktiere", "fachleuten", "hotline", "nicht geeignet", "notruf", "professionalle", "beratungsstelle" };
             if (keyWords.Any(x => response.ToLower().Contains(x)))
             {
                 chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.Text, Text = response });
                 chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.Question, Text = "Willst du eine Atem Übung machen?", Answers = new System.Collections.Generic.List<string> { "Ja", "Nein" } });
+            }
+            else if(keyWords1.Any(x => response.ToLower().Contains(x)))
+            {
+                chat.Messages.Add(new Message { Bot = true, MessageType = MessageType.SpecialInformation, Text = "Der Chatbot kann nicht weiterhelfen. Eine Person meldet sich schnellstmöglich." });
             }
             else
             {

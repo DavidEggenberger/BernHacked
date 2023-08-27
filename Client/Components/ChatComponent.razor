@@ -10,11 +10,15 @@
             foreach(var message in chatDTO.Messages)
             {
                 <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="message" chat="chatDTO"/>
-                @if(message.MessageType == MessageTypeDTO.SpecialInformation)
+                @if(message.MessageType == MessageTypeDTO.SpecialInformation && chatDTO.Messages.Count <= 2)
                 {
                     if (Configurations.All(c => c != ChatConfigurationDTO.OnlyHuman))
                     {
                         <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="botMessage" chat="chatDTO" />
+                    }
+                    else if (Configurations.Any(c => c == ChatConfigurationDTO.OnlyHuman))
+                    {
+                        <MessageComponent CallBack="() => this.GetMessagesForChat()" Message="personMessage" chat="chatDTO" />
                     }
                 }
             }
@@ -55,6 +59,12 @@
         MessageType = MessageTypeDTO.SpecialInformation,
         Text = "Der Chatbot started das Gespräch, bis eine Fachperson übernimmt"
     };
+
+    private MessageDTO personMessage = new MessageDTO
+        {
+            MessageType = MessageTypeDTO.SpecialInformation,
+            Text = "Bitte warten sie, bis eine Fachperson übernimmt"
+        };
 
     AzureCognitiveServicesTokenDTO token;
 

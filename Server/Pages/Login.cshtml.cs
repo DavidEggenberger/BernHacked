@@ -13,16 +13,9 @@ namespace Server.Pages
         {
         }
 
-        public async Task OnPostAsync()
+        public async Task<ActionResult> OnPostAsync()
         {
-            var claimsPrincipal = new ClaimsPrincipal(new List<ClaimsIdentity>
-            {
-                new ClaimsIdentity(new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, "Dargebotene Hand Admin")
-                })
-            });
-            await HttpContext.SignInAsync(claimsPrincipal);
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, "Microsoft");
         }
     }
 }

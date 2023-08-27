@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,11 +36,16 @@ namespace Server
             services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
             services.AddSignalR();
 
-            services.AddAuthentication()
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddMicrosoftAccount(options =>
+                {
+                    options.ClientId = Configuration["ClientId"];
+                    options.ClientSecret = Configuration["ClientSecret"];
+                })
                 .AddCookie(options =>
                 {
                     options.Cookie.Name = "Auth_Cookie";
-                    options.Cookie.Expiration = TimeSpan.FromDays(1);
+                    options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 });
 
             services.AddSwaggerGen(c =>
