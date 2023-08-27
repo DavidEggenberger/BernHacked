@@ -1,6 +1,7 @@
 ﻿@inject HttpClientService httpClientService
 @using Microsoft.AspNetCore.WebUtilities
 @using System.Web
+@inject NavigationManager navigationManager
 
 @if(Message.MessageType == MessageTypeDTO.PulseExercise)
 {
@@ -32,13 +33,23 @@ else if(Message.MessageType == MessageTypeDTO.SpecialInformation)
 }
 else if(Message.MessageType == MessageTypeDTO.Voice)
 {
-    <div class="Message" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
-       <audio style="height: 60px; width: 190px;" controls src="@("data:audio/webm;base64," + Message.Base64Data)"></audio>
+    @if(Message.Bot)
+    {
+        <div class="Message" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
+            <audio style="height: 60px; width: 190px;" controls autoplay src="@($"{navigationManager.BaseUri}{Message.Text}")"></audio>
+        </div>    
+    }
+    else
+    {
+        <div class="Message" style="@(Message.MessageSenderType == MessageSenderTypeDTO.Patient ? "align-self: flex-start;" : "align-self: flex-end;")">
+        <audio style="height: 60px; width: 190px;" controls src="@("data:audio/webm;base64," + Message.Base64Data)"></audio>
         @if (Message.Bot)
         {
             <span>Bot generiert</span>
         }
-    </div>
+        </div>
+    }
+    
 }
 else
 {
